@@ -1,225 +1,233 @@
-# Terraform Provider for filess.io Dedicated Databases
+# filess.io Dedicated Database Provider
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/filess/terraform-provider-dedicated)](https://goreportcard.com/report/github.com/filess/terraform-provider-dedicated)
 
-The filess provider enables you to create, manage, and configure dedicated databases on the [filess.io](https://filess.io) platform using Infrastructure as Code.
+This repository contains the **only** working example you need to provision a dedicated MySQL database on [filess.io](https://filess.io) using Terraform or OpenTofu.  
+The README below mirrors the exact configuration from `examples/create-mysql-database`, so you can copy/paste and get a successful deployment.
 
-## Features
+---
 
-- 🗄️ **Database Management**: Create and manage dedicated databases with custom configurations
-- 🌍 **Multi-Region**: Deploy databases across multiple regions
-- 🔧 **Multiple Engines**: Support for MySQL, PostgreSQL, MariaDB, MongoDB, and more
-- 💳 **Automatic Billing**: Integrated Stripe checkout for seamless payment processing
-- 🔐 **Credential Management**: Automatic retrieval of connection credentials
-- ✅ **State Reconciliation**: Handles external changes and deleted resources gracefully
-- 🔄 **Terraform & OpenTofu**: Compatible with both tools
+## 1. Prerequisites
 
-## Requirements
+| Tool | Version | Notes |
+|------|---------|-------|
+| Terraform **or** OpenTofu | ≥ 1.0 | All commands below use `tofu`, but Terraform works the same way |
+| Go (optional) | ≥ 1.21 | Only required if you want to build the provider locally |
+| filess.io account | – | You need an organization, namespace and API token |
 
-- [Terraform](https://www.terraform.io/downloads.html) >= 1.0 or [OpenTofu](https://opentofu.org/) >= 1.0
-- [Go](https://golang.org/doc/install) >= 1.21 (for building from source)
-- filess.io account with API token
+### Required inputs
 
-## Using the Provider
+- `filess_api_token` – generate it from the filess.io dashboard
+- `organization_slug` – your organization identifier (e.g. `acme`)
+- `namespace_slug` – the namespace where databases will live (e.g. `production`)
 
-### Installation
+We recommend storing those values in a `terraform.tfvars` file (see step 3).
 
-The provider is available on the [Terraform Registry](https://registry.terraform.io/providers/filess/filess/latest).
+---
+
+## 2. Clone the repo & open the working example
+
+```bash
+git clone https://github.com/filess-io/terraform-provider-dedicated.git
+cd terraform-provider-dedicated/examples/create-mysql-database
+```
+
+The directory already contains a **fully working** `main.tf` plus outputs.
+
+---
+
+## 3. Provide your credentials
+
+You can either export environment variables or create a `terraform.tfvars` file.
+
+### Option A – Environment variables (recommended for CI)
+
+```bash
+export TF_VAR_filess_api_token="your-api-token"
+export TF_VAR_organization_slug="your-org"
+export TF_VAR_namespace_slug="your-namespace"
+```
+
+### Option B – `terraform.tfvars`
+
+Copy the template and fill your values:
+
+```bash
+cp terraform.tfvars.example terraform.tfvars
+```
+
+```hcl
+filess_api_token = "your-api-token"
+organization_slug = "your-org"
+namespace_slug = "your-namespace"
+```
+
+> `filess_api_url` defaults to `https://backend.filess.io`, override it only if filess support asks you to point to another environment.
+
+---
+
+## 4. Understand the configuration
+
+This is the **exact** configuration that works today (abridged for clarity):
 
 ```hcl
 terraform {
   required_providers {
     filess = {
-      source  = "app.terraform.io/filess/provider/filessdedicated"
-      version = "~> 1.0"
+      source  = "filess-io/dedicated"
+      version = ">= 1.0.0"
     }
   }
 }
 
 provider "filess" {
   api_token = var.filess_api_token
-  api_url   = "https://backend.filess.io" # Optional, defaults to production API
+  api_url   = var.filess_api_url
 }
-```
 
-### Quick Start
-
-```hcl
-# Get available engines and regions
 data "filess_engines" "all" {}
 data "filess_regions" "all" {}
 
-# Find MySQL 8.0
 locals {
   mysql_engine = [
     for engine in data.filess_engines.all.engines :
     engine if engine.name == "MySQL" && engine.version == "8.0"
   ][0]
+
+  selected_region = data.filess_regions.all.regions[0]
 }
 
-# Create a MySQL database
-resource "filess_database" "production" {
-  organization_slug = "my-org"
-  namespace_slug    = "production"
-  
-  name        = "prod-mysql-db"
-  description = "Production MySQL database"
-  
+resource "filess_database" "mysql_test" {
+  organization_slug = var.organization_slug
+  namespace_slug    = var.namespace_slug
+
+  name        = "terraform-mysql-db"
+  description = "MySQL database created by Terraform provider"
+
   engine_id = local.mysql_engine.id
-  region_id = data.filess_regions.all.regions[0].id
-  
+  region_id = local.selected_region.id
+
   database_plan {
-    billable_items {
-      billable_item_id = "6"   # Storage 0.5GiB
-      quantity         = 1
-    }
-    
-    billable_items {
-      billable_item_id = "7"   # Network Bandwidth 1MB/s
-      quantity         = 100
-    }
-    
-    billable_items {
-      billable_item_id = "8"   # Choose Region
-      quantity         = 1
-    }
-    
-    billable_items {
-      billable_item_id = "10"  # CPU Core 0.25
-      quantity         = 1
-    }
-    
-    billable_items {
-      billable_item_id = "12"  # Database Setup
-      quantity         = 1
-    }
-    
-    billable_items {
-      billable_item_id = "13"  # Memory 0.5GiB
-      quantity         = 1
-    }
+    billable_items { billable_item_id = "6"  quantity = 1   } # Storage 0.5GiB
+    billable_items { billable_item_id = "7"  quantity = 100 } # Network 100 MB/s
+    billable_items { billable_item_id = "8"  quantity = 1   } # Choose Region
+    billable_items { billable_item_id = "10" quantity = 1   } # CPU 0.25 core
+    billable_items { billable_item_id = "12" quantity = 1   } # DB setup
+    billable_items { billable_item_id = "13" quantity = 1   } # Memory 0.5 GiB
   }
 }
 
-# Output connection details
-output "database_connection" {
-  value = {
-    host     = filess_database.production.database_hostname
-    port     = filess_database.production.database_service_port
-    username = filess_database.production.database_username
-    password = filess_database.production.database_password
-  }
-  sensitive = true
-}
+output "database_hostname"        { value = filess_database.mysql_test.database_hostname }
+output "database_service_port"    { value = filess_database.mysql_test.database_service_port }
+output "database_username"        { value = filess_database.mysql_test.database_username }
+output "database_password"        { value = filess_database.mysql_test.database_password  sensitive = true }
 ```
 
-## Documentation
+Key aspects:
 
-Full documentation is available on the [Terraform Registry](https://registry.terraform.io/providers/filess/filess/latest/docs).
+- **Provider source**: `filess-io/dedicated`
+- **Billable items**: Use the exact IDs shown above or consult `/api/v1/databases/create/metadata`
+- **Credential outputs**: hostname, port, username and password are computed once the DB is deployed
+- **Stripe checkout**: if payment is required, the provider halts and prints the checkout URL directly in the terminal (no `TF_LOG` required)
 
-### Resources
+---
 
-- [filess_database](https://registry.terraform.io/providers/filess/filess/latest/docs/resources/database) - Manage database instances
+## 5. Run it
 
-### Data Sources
-
-- [filess_engines](https://registry.terraform.io/providers/filess/filess/latest/docs/data-sources/engines) - Get available database engines
-- [filess_regions](https://registry.terraform.io/providers/filess/filess/latest/docs/data-sources/regions) - Get available deployment regions
-
-## Development
-
-### Building from Source
+From `examples/create-mysql-database/`:
 
 ```bash
-git clone https://github.com/filess/terraform-provider-dedicated
+tofu init    # or terraform init
+tofu plan    # verify configuration
+tofu apply   # provision the database
+```
+
+During `apply` you may see a message similar to:
+
+```
+⚠️  PAYMENT REQUIRED
+Please open this URL to complete the Stripe checkout:
+  https://checkout.stripe.com/...
+```
+
+Open the URL, pay, and the provider will keep waiting until filess marks the database as `deployed`.
+
+---
+
+## 6. Outputs & next steps
+
+After `tofu apply` finishes you will get:
+
+```
+Outputs:
+
+database_hostname        = "mysql-1234.backend.filess.io"
+database_service_port    = 3306
+database_username        = "root"
+database_password        = (sensitive value)
+database_id              = "db_abc123"
+database_status          = "deployed"
+database_region          = "us-east-1"
+```
+
+Use those values directly in your applications or CI pipelines to connect to the database.
+
+---
+
+## 7. Troubleshooting checklist
+
+| Symptom | Fix |
+|---------|-----|
+| `Invalid provider source string` | Ensure `source = "filess-io/dedicated"` |
+| `Could not retrieve list of available versions` | Run `tofu init -upgrade` or check internet access |
+| `401 Unauthorized` | Confirm `filess_api_token` is valid and belongs to the target organization |
+| Stripe URL only shows with `TF_LOG` | Fixed – the provider prints the message to `/dev/tty` automatically |
+| Database deleted outside Terraform | Provider detects 404s and will recreate on next `apply` |
+
+If you run into issues, run with `TF_LOG=DEBUG tofu apply` and/or open an [issue](https://github.com/filess-io/terraform-provider-dedicated/issues) including the log excerpt.
+
+---
+
+## 8. Developing the provider locally (optional)
+
+```bash
+git clone https://github.com/filess-io/terraform-provider-dedicated.git
 cd terraform-provider-dedicated
 go build -o terraform-provider-dedicated
 ```
 
-### Local Development
-
-Create a `.terraformrc` file in your home directory:
+Create `~/.terraformrc` or `~/.tofurc`:
 
 ```hcl
 provider_installation {
   dev_overrides {
-    "registry.terraform.io/filess/filess" = "/path/to/terraform-provider-dedicated"
+    "filess-io/dedicated" = "/absolute/path/to/terraform-provider-dedicated"
   }
   direct {}
 }
 ```
 
-Then build the provider:
-
-```bash
-go build -o terraform-provider-dedicated .
-```
-
-### Running Tests
-
-```bash
-go test ./...
-```
-
-### Generating Documentation
-
-Documentation is generated using [terraform-plugin-docs](https://github.com/hashicorp/terraform-plugin-docs):
-
-```bash
-go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs@latest
-tfplugindocs generate
-```
-
-## Examples
-
-See the [examples](./examples) directory for complete working examples:
-
-- [create-mysql-database](./examples/create-mysql-database) - Complete MySQL database setup
-
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request.
-
-### Development Guidelines
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-feature`)
-3. Commit your changes (`git commit -am 'Add new feature'`)
-4. Push to the branch (`git push origin feature/my-feature`)
-5. Open a Pull Request
-
-## Security
-
-### Reporting Security Issues
-
-Please report security vulnerabilities to: security@filess.io
-
-### Best Practices
-
-- **Never commit `terraform.tfvars`** - Use environment variables or secret managers
-- **Use remote state** - Store state securely in S3, Terraform Cloud, etc.
-- **Rotate API tokens** - Regularly rotate your filess.io API tokens
-- **Review state files** - State files contain sensitive data; handle with care
-
-## Support
-
-- 📧 Email: support@filess.io
-- 📚 Documentation: https://docs.filess.io
-- 🐛 Issues: https://github.com/filess/terraform-provider-dedicated/issues
-- 💬 Community: [filess.io Discord](https://discord.gg/filess)
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-Built with:
-- [Terraform Plugin SDK](https://github.com/hashicorp/terraform-plugin-sdk)
-- [Go](https://golang.org/)
+Then re-run `tofu init` inside your example directory and Terraform/OpenTofu will use the local binary.
 
 ---
 
-Made with ❤️ by the [filess.io](https://filess.io) team
+## 9. Contributing & Support
+
+- 📚 Examples: see the `examples/` folder (the MySQL one is production-ready)
+- 🐛 Issues & feature requests: [github.com/filess-io/terraform-provider-dedicated/issues](https://github.com/filess-io/terraform-provider-dedicated/issues)
+- 📧 Support: support@filess.io
+- 💬 Community: [Discord](https://discord.gg/filess)
+
+Pull requests are welcome! Please open an issue first if you plan to work on new resources or data sources so we can coordinate efforts.
+
+---
+
+## 10. License
+
+MIT © filess.io – see [LICENSE](LICENSE).
+
+---
+
+Made with ❤️ by the filess.io team.
 
