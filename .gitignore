@@ -38,4 +38,13 @@ go.work
 # Terragrunt
 .terragrunt-cache/
 
+# GPG Keys (NEVER COMMIT THESE!)
+*.asc
+*.gpg
+private-key*
+secret-key*
+*.key
+*.pem
 
+# GoReleaser
+dist/
