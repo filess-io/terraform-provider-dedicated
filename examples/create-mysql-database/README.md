@@ -366,10 +366,10 @@ resource "filess_database" "mysql_test" {
 
 - 📧 Email: support@filess.io
 - 📚 Documentation: https://docs.filess.io
-- 🐛 Issues: https://github.com/filess/terraform-provider-filess/issues
+- 🐛 Issues: https://github.com/filess/terraform-provider-dedicated/issues
 - 💬 Community: [filess.io Discord](https://discord.gg/filess)
 
 ## License
 
-This example is part of the terraform-provider-filess project, licensed under the MIT License.
+This example is part of the terraform-provider-dedicated project, licensed under the MIT License.
 

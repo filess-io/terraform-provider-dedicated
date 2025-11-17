@@ -1,5 +1,5 @@
 ---
-page_title: "Data Source filess_regions - terraform-provider-filess"
+page_title: "Data Source filess_regions - terraform-provider-dedicated"
 subcategory: ""
 description: |-
   

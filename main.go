@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	
-	"github.com/filess/terraform-provider-filess/internal/provider"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
+
+	"github.com/filess/terraform-provider-dedicated/internal/provider"
 )
 
 func main() {
@@ -14,5 +14,3 @@ func main() {
 		},
 	})
 }
-
-

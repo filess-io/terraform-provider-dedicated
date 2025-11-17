@@ -1,5 +1,6 @@
 # Binaries
-terraform-provider-filess
+terraform-provider-dedicated
+terraform-provider-dedicated
 *.exe
 *.exe~
 *.dll

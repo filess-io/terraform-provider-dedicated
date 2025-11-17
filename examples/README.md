@@ -331,14 +331,14 @@ Have a useful example? Contributions are welcome!
 - 🌐 [filess.io Dashboard](https://filess.io/dashboard)
 - 📖 [filess.io Documentation](https://docs.filess.io)
 - 💬 [Community Discord](https://discord.gg/filess)
-- 🐛 [Report Issues](https://github.com/filess/terraform-provider-filess/issues)
+- 🐛 [Report Issues](https://github.com/filess/terraform-provider-dedicated/issues)
 
 ## Support
 
 Need help? Reach out:
 - Email: support@filess.io
 - Documentation: https://docs.filess.io
-- GitHub Issues: https://github.com/filess/terraform-provider-filess/issues
+- GitHub Issues: https://github.com/filess/terraform-provider-dedicated/issues
 
 ---
 

@@ -1,4 +1,4 @@
-# Contributing to terraform-provider-filess
+# Contributing to terraform-provider-dedicated
 
 Thank you for your interest in contributing to the filess Terraform Provider! This document provides guidelines and instructions for contributing.
 
@@ -50,13 +50,13 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/filess/terraform-provider-filess
-cd terraform-provider-filess
+git clone https://github.com/filess/terraform-provider-dedicated
+cd terraform-provider-dedicated
 ```
 
 2. Build the provider:
 ```bash
-go build -o terraform-provider-filess .
+go build -o terraform-provider-dedicated .
 ```
 
 3. Set up local provider override:
@@ -65,7 +65,7 @@ Create `~/.terraformrc` (or `~/.tofurc` for OpenTofu):
 ```hcl
 provider_installation {
   dev_overrides {
-    "registry.terraform.io/filess/filess" = "/path/to/terraform-provider-filess"
+    "registry.terraform.io/filess/filess" = "/path/to/terraform-provider-dedicated"
   }
   direct {}
 }

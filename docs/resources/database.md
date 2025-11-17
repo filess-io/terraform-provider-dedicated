@@ -1,5 +1,5 @@
 ---
-page_title: "Resource filess_database - terraform-provider-filess"
+page_title: "Resource filess_database - terraform-provider-dedicated"
 subcategory: ""
 description: |-
   

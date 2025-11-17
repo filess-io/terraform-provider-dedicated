@@ -5,8 +5,8 @@ before:
     - go mod tidy
 
 builds:
-  - id: terraform-provider-filess
-    binary: terraform-provider-filess_v{{ .Version }}
+  - id: terraform-provider-dedicated
+    binary: terraform-provider-dedicated_v{{ .Version }}
     mod_timestamp: "{{ .CommitTimestamp }}"
     flags:
       - -trimpath

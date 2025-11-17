@@ -1,7 +1,7 @@
-# Terraform Provider for filess.io
+# Terraform Provider for filess.io Dedicated Databases
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Go Report Card](https://goreportcard.com/badge/github.com/filess/terraform-provider-filess)](https://goreportcard.com/report/github.com/filess/terraform-provider-filess)
+[![Go Report Card](https://goreportcard.com/badge/github.com/filess/terraform-provider-dedicated)](https://goreportcard.com/report/github.com/filess/terraform-provider-dedicated)
 
 The filess provider enables you to create, manage, and configure dedicated databases on the [filess.io](https://filess.io) platform using Infrastructure as Code.
 
@@ -132,9 +132,9 @@ Full documentation is available on the [Terraform Registry](https://registry.ter
 ### Building from Source
 
 ```bash
-git clone https://github.com/filess/terraform-provider-filess
-cd terraform-provider-filess
-go build -o terraform-provider-filess
+git clone https://github.com/filess/terraform-provider-dedicated
+cd terraform-provider-dedicated
+go build -o terraform-provider-dedicated
 ```
 
 ### Local Development
@@ -144,7 +144,7 @@ Create a `.terraformrc` file in your home directory:
 ```hcl
 provider_installation {
   dev_overrides {
-    "registry.terraform.io/filess/filess" = "/path/to/terraform-provider-filess"
+    "registry.terraform.io/filess/filess" = "/path/to/terraform-provider-dedicated"
   }
   direct {}
 }
@@ -153,7 +153,7 @@ provider_installation {
 Then build the provider:
 
 ```bash
-go build -o terraform-provider-filess .
+go build -o terraform-provider-dedicated .
 ```
 
 ### Running Tests
@@ -206,7 +206,7 @@ Please report security vulnerabilities to: security@filess.io
 
 - 📧 Email: support@filess.io
 - 📚 Documentation: https://docs.filess.io
-- 🐛 Issues: https://github.com/filess/terraform-provider-filess/issues
+- 🐛 Issues: https://github.com/filess/terraform-provider-dedicated/issues
 - 💬 Community: [filess.io Discord](https://discord.gg/filess)
 
 ## License

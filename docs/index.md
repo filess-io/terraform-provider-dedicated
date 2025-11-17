@@ -240,5 +240,5 @@ terraform {
 
 - 📧 Support: support@filess.io
 - 📚 Documentation: https://docs.filess.io
-- 🐛 Issues: https://github.com/filess/terraform-provider-filess/issues
+- 🐛 Issues: https://github.com/filess/terraform-provider-dedicated/issues
 

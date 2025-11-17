@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/filess/terraform-provider-filess/internal/client"
+	"github.com/filess/terraform-provider-dedicated/internal/client"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
