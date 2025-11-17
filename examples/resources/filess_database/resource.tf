@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    filess = {
+      source = "app.terraform.io/filess/provider/filessdedicated"
+      version = ">=1.0.0"
+    }
+  }
+}
+
 data "filess_engines" "all" {}
 data "filess_regions" "all" {}
 

@@ -51,6 +51,15 @@ Each example includes:
 ### Finding Database Engines
 
 ```hcl
+terraform {
+  required_providers {
+    filess = {
+      source = "app.terraform.io/filess/provider/filessdedicated"
+      version = ">=1.0.0"
+    }
+  }
+}
+
 data "filess_engines" "all" {}
 
 # Filter by name and version
@@ -70,6 +79,15 @@ locals {
 ### Finding Regions
 
 ```hcl
+terraform {
+  required_providers {
+    filess = {
+      source = "app.terraform.io/filess/provider/filessdedicated"
+      version = ">=1.0.0"
+    }
+  }
+}
+
 data "filess_regions" "all" {}
 
 # Use first available
@@ -89,6 +107,15 @@ locals {
 ### Resource Configuration
 
 ```hcl
+terraform {
+  required_providers {
+    filess = {
+      source = "app.terraform.io/filess/provider/filessdedicated"
+      version = ">=1.0.0"
+    }
+  }
+}
+
 resource "filess_database" "example" {
   organization_slug = "my-org"
   namespace_slug    = "production"

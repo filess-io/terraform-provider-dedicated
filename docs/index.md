@@ -23,7 +23,7 @@ The filess provider enables you to create, manage, and configure dedicated datab
 terraform {
   required_providers {
     filess = {
-      source = "registry.terraform.io/filess/filess"
+      source = "app.terraform.io/filess/provider/filessdedicated"
       version = ">=1.0.0"
     }
   }

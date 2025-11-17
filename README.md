@@ -31,7 +31,7 @@ The provider is available on the [Terraform Registry](https://registry.terraform
 terraform {
   required_providers {
     filess = {
-      source  = "filess/filess"
+      source  = "app.terraform.io/filess/provider/filessdedicated"
       version = "~> 1.0"
     }
   }
