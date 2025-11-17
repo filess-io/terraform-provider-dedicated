@@ -55,7 +55,7 @@ terraform {
   required_providers {
     filess = {
       source = "app.terraform.io/filess/provider/filessdedicated"
-      version = ">=1.0.0"
+      version = ">=1.0.6"
     }
   }
 }
@@ -83,7 +83,7 @@ terraform {
   required_providers {
     filess = {
       source = "app.terraform.io/filess/provider/filessdedicated"
-      version = ">=1.0.0"
+      version = ">=1.0.6"
     }
   }
 }
@@ -111,7 +111,7 @@ terraform {
   required_providers {
     filess = {
       source = "app.terraform.io/filess/provider/filessdedicated"
-      version = ">=1.0.0"
+      version = ">=1.0.6"
     }
   }
 }
