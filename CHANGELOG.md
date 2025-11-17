@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Default API URL**: Changed default `api_url` to `https://backend.filess.io`
 - Initial release of the filess Terraform Provider
+
+### Fixed
+- **GoReleaser**: Fixed duplicate archive names for ARM architectures (armv6/armv7 now generate unique files)
 - **Resource: `filess_database`**
   - Create, read, update, and delete database instances
   - Automatic waiting for database credentials before completion
