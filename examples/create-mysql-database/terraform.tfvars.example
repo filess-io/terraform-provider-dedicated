@@ -1,0 +1,8 @@
+# Copia este archivo a terraform.tfvars y completa con tus valores
+# cp terraform.tfvars.example terraform.tfvars
+
+filess_api_token   = "TU_TOKEN_DE_API_AQUI"
+filess_api_url     = "https://backend.filess.io"  # O la URL de producción
+organization_slug  = "tu-organization-slug"
+namespace_slug     = "tu-namespace-slug"
+

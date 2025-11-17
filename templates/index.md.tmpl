@@ -1,0 +1,98 @@
+---
+page_title: "filess Provider"
+description: |-
+  The filess provider allows you to manage dedicated databases on filess.io platform.
+---
+
+# filess Provider
+
+The filess provider enables you to create, manage, and configure dedicated databases on the [filess.io](https://filess.io) platform using Infrastructure as Code.
+
+## Features
+
+- 🗄️ **Database Management**: Create and manage dedicated databases with custom configurations
+- 🌍 **Multi-Region**: Deploy databases across multiple regions
+- 🔧 **Multiple Engines**: Support for MySQL, PostgreSQL, MariaDB, MongoDB, and more
+- 💳 **Automatic Billing**: Integrated Stripe checkout for seamless payment processing
+- 🔐 **Credential Management**: Automatic retrieval of connection credentials
+- ✅ **State Reconciliation**: Handles external changes and deleted resources gracefully
+
+## Example Usage
+
+{{tffile "examples/create-mysql-database/main.tf"}}
+
+## Authentication
+
+The provider requires an API token for authentication. You can obtain your API token from the [filess.io dashboard](https://filess.io/dashboard).
+
+### Using Environment Variables (Recommended)
+
+```bash
+export TF_VAR_filess_api_token="your-api-token-here"
+```
+
+### Using Variables File
+
+Create a `terraform.tfvars` file (never commit this file):
+
+```hcl
+filess_api_token = "your-api-token-here"
+filess_api_url   = "https://backend.filess.io"  # Optional, this is the default
+```
+
+## Provider Configuration
+
+The provider can be configured with the following options:
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Important Notes
+
+### Credential Retrieval
+
+When creating a database, the provider automatically waits for the database to be fully provisioned and retrieves connection credentials. These include:
+
+- `database_hostname`: The hostname to connect to
+- `database_service_port`: The port number
+- `database_username`: The username (typically "root")
+- `database_password`: The password (marked as sensitive)
+
+### Payment Required
+
+If your organization doesn't have a default payment method configured, the provider will display a Stripe checkout URL during the apply process. You must complete the payment for provisioning to continue.
+
+The URL will be displayed directly in your terminal:
+
+```
+╔════════════════════════════════════════════════════════════╗
+║  ⚠️  PAYMENT REQUIRED                                      ║
+╚════════════════════════════════════════════════════════════╝
+
+The database requires payment to continue provisioning.
+Please open this URL to complete the Stripe checkout:
+
+  https://checkout.stripe.com/...
+
+Waiting for payment completion...
+```
+
+### State Management
+
+For production use, we recommend using remote state storage:
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket = "my-terraform-state"
+    key    = "filess/terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+```
+
+## Support
+
+- 📧 Support: support@filess.io
+- 📚 Documentation: https://docs.filess.io
+- 🐛 Issues: https://github.com/filess/terraform-provider-filess/issues
+
