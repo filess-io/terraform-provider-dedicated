@@ -4,7 +4,7 @@ This example demonstrates how to create a MySQL 8.0 database on filess.io using 
 
 ## Overview
 
-**Provider Source**: `app.terraform.io/filess/provider/filessdedicated`
+**Provider Source**: `filess-io/dedicated`
 
 This example creates a complete MySQL database instance with:
 - MySQL 8.0 engine

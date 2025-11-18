@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     filess = {
-      source = "app.terraform.io/filess/provider/filessdedicated"
+      source = "filess-io/dedicated"
       version = ">=1.0.6"
     }
   }
